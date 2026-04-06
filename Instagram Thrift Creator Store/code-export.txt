@@ -1,0 +1,98 @@
+notation chen
+colorMode pastel
+styleMode watercolor
+typeface clean
+Users [icon:user, color:green]{
+  UserId serial pk
+  Username text notNull
+  email text notNull
+  password text notNull 
+  phone text(10) //Local selling so the number will be 10 char only.
+  Avatar_URL text 
+  pincode int not null  
+  DOB date
+  Addres text not null 
+  IsAdmin True | False
+
+  CreatedAt timestamp
+  UpdateAt timestamp
+}
+
+Item[icon:store, color:green]{
+  ItemId Serial pk
+  ItemName text 
+  price number
+  availableStock number
+  size number
+  category text 
+  color text 
+  Weather_Condition text
+  handmade True | False //if it is not handmade, it would be thrifit item 
+  CreatedAt timestamp
+  UpdateAt timestamp
+}
+
+Users.UserId < order.CustomerId
+
+
+
+order[icon:shopping-cart, color:orange]{
+  CartId serial pk
+  OrderID int fk
+  CustomerId int fk
+  DeleiveryId int fk
+  PaymentId int fk 
+  
+  CreatedAt timestamp
+  UpdateAt timestamp
+}
+order.CartId - OrderedItem.CartID
+Payment.PaymentId - order.PaymentId
+
+order.OrderID - delivery.OrderID
+Users.UserId - delivery.CustomerId 
+
+
+delivery[icon:ship, color: Orange]{
+  DeleiveryId serial PK
+  OrderID int not null fk  
+  CustomerId int not null fk
+  pincode int not null
+  Addres text not null
+  Status confirm | out for deleivery  | shipped | delivered
+  TrakingNo text notNull unique
+  shippedAt date and timestamp
+  deleiveredAt date and timestamp
+  CreatedAt date and timestamp
+  UpdateAt date and timestamp
+}
+
+Payment[icon:payment, color: Red]{
+  PaymentId serial pk
+  status text not null 
+  MethodOfPayment text not null 
+  amount int not null
+  CreatedAt timestamp 
+  CompletedAt timestamp
+}
+OrderedItem.ProductId - Item.ItemId
+
+OrderedItem[icon:package, color: Orange]{
+Id serial pk 
+CartID serial not null  pk 
+ProductId int not null  fk
+//there will be multiple rows id's of all the item that are in the cart.  
+CreatedAt timestamp
+UpdateAt timestamp
+}
+
+Tokens[icon:auth0, color: Red]{
+  Id serial pk
+  UserId int fk 
+  
+  Token text 
+  UpdateAt timestamp
+  ExpiresAt data or time 
+  RefreshToken text 
+}
+Tokens.UserId - Users.UserId
