@@ -1,0 +1,110 @@
+title Online Fitness Coaching Platform
+notation chen
+colorMode pastel
+styleMode watercolor
+typeface clean
+
+clients [icon: users, color:green]{
+  client_id serial pk
+  username text not_null unique
+  email text not_null unique
+  password text not_null  
+  phone text(10) not_null unique//Local selling so the number will be 10 char only.
+  avatar_url text 
+  DOB date not_null
+  address text not_null 
+
+  created_at  timestamp
+  updated_at timestamp
+} 
+
+body_measurement[icon:settings, color:yellow]{
+  id serial pk
+  client_id int fk 
+  body_type enum(male, female)
+  chest number not_null //(widest part) 
+  waist number not_null //(narrowest part)
+  hips number not_null //(widest part)
+  thighs number not_null //(midpoint or widest)
+  biceps number not_null //(widest part)
+
+  created_at timestamp
+  updated_at timestamp
+}
+//the body measurement will be be taken every day or selected time and it will be updated each time to keep the progress and check-in report
+trainer [icon:user, color:green]{
+  trainer_id serial pk
+  username text notNull unique
+  email text notNull unique
+  password text notNull 
+  phone text(10) //Local selling so the number will be 10 char only.
+  avatar_url text 
+    
+  DOB date
+  address text not null 
+
+  created_at timestamp
+  updated_at timestamp
+} 
+
+fitness_plans[icon:azure-plans, color:blue]{
+  id serial pk
+  name text not null unique
+  trainer_id int not_null
+  enroled_client_id int fk  
+  plan_starts_at date not_null
+  plan_ends_at date not_null
+  created_at timestamp 
+  updated_at timestamp
+}
+
+
+enroled_client[icon:azure-user-subscriptions, color:orange]{
+id serial pk
+plan_id int fk
+client_id int fk 
+created_at timestamp 
+updated_at timestamp
+}
+meeting[icon: video-camera, color:blue]{
+  meeting_id serial pk
+  attendees int fk
+  host_id int fk
+  class_date date not_null
+  recorded_class_url_link text 
+  created_at timestamp
+  updated_at timestamp 
+}
+
+
+payment[icon:payment, color:red]{
+  id serial pk
+  client_id int fk
+  fitness_plans_id int fk 
+  amount int not null 
+  mode enum(monthly, quarterly, full_payment) not_null
+  payment_method enum(cash, card, upi) not_null
+  no_of_emi  int 
+  created_at timestamp
+  updated_at timestamp
+}
+//clients 
+clients.client_id - body_measurement.client_id
+//body_measurement will be updated to keep the update of the progress and history will be kept.
+
+//trainer 
+trainer.trainer_id < fitness_plans.trainer_id
+
+//enroled_client
+enroled_client.client_id <> clients.client_id
+fitness_plans.enroled_client_id < enroled_client.plan_id
+
+//meeting
+meeting.host_id - trainer.trainer_id
+meeting.attendees < enroled_client.plan_id
+//those in the enroled_client with this plan_id will only be able to access the meeting and its recording.
+
+//payment
+payment.client_id - clients.client_id
+payment.fitness_plans_id - fitness_plans.id
+ 
