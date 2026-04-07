@@ -39,7 +39,7 @@ Client progress (body measurements) is stored over time
 
 ## Eraser Whiteboard
 
-### View the interactive diagram: **[Open in Eraser](https://app.eraser.io/workspace/1206tS0VU0tb9UxP1r3W)**
+### View the interactive diagram: **[Open in Eraser](https://app.eraser.io/workspace/1206tS0VU0tb9UxP1r3W?origin=share)**
 
 ## Code
 

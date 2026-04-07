@@ -1,4 +1,4 @@
-title Online Fitness Coaching Platform
+
 notation chen
 colorMode pastel
 styleMode watercolor
@@ -47,15 +47,33 @@ trainer [icon:user, color:green]{
   updated_at timestamp
 } 
 
-fitness_plans[icon:azure-plans, color:blue]{
+plans [icon: azure-plans, color: blue] {
   id serial pk
-  name text not null unique
-  trainer_id int not_null
-  enroled_client_id int fk  
+  trainer_id int not_null fk
+  enroled_client_id int fk 
+  title text not_null
+  description text
   plan_starts_at date not_null
   plan_ends_at date not_null
-  created_at timestamp 
-  updated_at timestamp
+  price number NOT NULL
+  mode ENUM('online', 'offline', 'hybrid') NOT NULL
+ 
+  created_at TIMESTAMP 
+  updated_at TIMESTAMP 
+}
+
+subscriptions [icon: azure-subscriptions , color: blue] {
+  id serial pk
+  enroled_client_id int fk 
+  plan_id number not_null fk
+
+  start_date date not_null
+  end_date date not_null
+  price_at_purchase number not_null
+  status ENUM('active', 'expired', 'cancelled') not_null
+
+  created_at TIMESTAMP 
+  updated_at TIMESTAMP 
 }
 
 
@@ -100,13 +118,17 @@ tokens[icon:auth0, color: Red]{
 //clients 
 clients.client_id - body_measurement.client_id
 //body_measurement will be updated to keep the update of the progress and history will be kept.
+//plans
+plans.id <> subscriptions.plan_id
+
 
 //trainer 
-trainer.trainer_id < fitness_plans.trainer_id
+trainer.trainer_id < subscriptions .trainer_id
+trainer.trainer_id < plans .trainer_id
 
 //enroled_client
 enroled_client.client_id <> clients.client_id
-fitness_plans.enroled_client_id < enroled_client.plan_id
+plans .enroled_client_id < enroled_client.plan_id
 
 //meeting
 meeting.host_id - trainer.trainer_id
@@ -115,7 +137,9 @@ meeting.attendees < enroled_client.plan_id
 
 //payment
 payment.client_id - clients.client_id
-payment.fitness_plans_id - fitness_plans.id
+payment.fitness_plans_id - plans.id
+payment.fitness_plans_id - subscriptions .id
  
 //token
 clients.client_id - tokens.client_id
+
