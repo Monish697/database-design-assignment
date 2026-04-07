@@ -25,3 +25,9 @@ The design is simple enough for a student project, but also realistic enough to 
 ## ER Diagram Preview
 
 ![ER Diagram](./ER_digram.png)
+
+---
+
+## 🔗 Eraser Whiteboard
+
+👉 View the interactive diagram: **[Open in Eraser](https://app.eraser.io/workspace/MluyHxFXMeh8Jr6eeMo4)**
