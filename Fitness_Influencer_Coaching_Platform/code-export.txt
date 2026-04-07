@@ -88,6 +88,15 @@ payment[icon:payment, color:red]{
   created_at timestamp
   updated_at timestamp
 }
+tokens[icon:auth0, color: Red]{
+  id serial pk
+  client_id int fk 
+  
+  token text not_null unique
+  refresh_token text not_null unique
+  updated_at timestamp 
+  expires_at data or time 
+}
 //clients 
 clients.client_id - body_measurement.client_id
 //body_measurement will be updated to keep the update of the progress and history will be kept.
@@ -108,3 +117,5 @@ meeting.attendees < enroled_client.plan_id
 payment.client_id - clients.client_id
 payment.fitness_plans_id - fitness_plans.id
  
+//token
+clients.client_id - tokens.client_id
