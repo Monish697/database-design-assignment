@@ -1,0 +1,124 @@
+title Clinic Appointment and Diagnostics Platform
+notation chen
+colorMode pastel
+styleMode watercolor
+typeface clean
+
+patients [icon: users, color:green]{
+  patients_id serial pk
+  patients_name text not_null unique
+  email text not_null unique
+  password text not_null  
+  phone text(10) not_null unique//Local selling so the number will be 10 char only.
+  avatar_url text 
+  DOB date not_null
+  address text not_null 
+
+  created_at  timestamp
+  updated_at timestamp
+} 
+
+docters[icon:doctor, color:green]{
+id serial pk
+speacilist text not_null
+email text not_null unique
+phone text(10) not_null unique
+password text not_null 
+
+created_at  timestamp
+updated_at timestamp
+}
+
+payment[icon:payment, color:red]{
+  id serial pk
+  client_id int fk
+  amount int not null 
+  payment_method enum(cash, card, upi) not_null
+
+  created_at timestamp
+  updated_at timestamp
+}
+
+tokens[icon:auth0, color: Red]{
+  id serial pk
+  token text not_null unique
+  refresh_token text not_null unique
+  updated_at timestamp 
+  expires_at data or time 
+}
+
+appointment[icon:history, color:orange]{
+  id serial pk
+  patients_id int fk 
+  docter_id int fk
+  payment_id int fk
+  booking_status enum("booked", "not_booked") not_null
+  consultations_status enum("in_person", "online_meeting", "minor_query") not_null
+  note text not_null 
+  //given at time of booking the appointment by patient as a breif of why they are their
+
+  //---
+
+  //if consultations_status is online meeting then their will be a meeting id 
+  meeting_id int fk
+
+  created_at timestamp
+  updated_at timestamp
+}
+
+meeting[icon: video-camera, color:blue]{
+  meeting_id serial pk
+  patients_id int fk
+  docter_id int fk
+  meeting_date date not_null
+  conclution text fk
+
+  created_at timestamp
+  updated_at timestamp 
+}
+
+reports[icon:report, color:blue]{
+id serial pk
+patients_id int fk
+diagnostic_tests int fk
+report_conclution text not_null
+
+created_at timestamp
+updated_at timestamp 
+}
+
+diagnostic_test[icon:azure-diagnostics-settings, color:blue]{
+  id serial pk
+  name text not_null
+  procedure text not_null
+  description text not_null 
+
+  created_at timestamp
+  updated_at timestamp 
+}
+
+//reports
+reports.patients_id - patients.patients_id
+//their can be multiple test per patients.
+reports.diagnostic_tests < diagnostic_test.id
+
+
+//meeting
+meeting.patients_id - patients.patients_id
+meeting.docter_id - docters.id
+appointment.meeting_id - meeting.meeting_id
+
+
+
+//appointment
+appointment.client_id - patients.patients_id
+appointment.docter_id < docters.id
+appointment.payment_id - payment.id
+
+
+//token
+patients.patients_id - tokens.id
+docters.id - tokens.id
+
+//payment will store all the info of the patient and have all the payment history from the first appointment.
+patients.patients_id - payment.client_id
