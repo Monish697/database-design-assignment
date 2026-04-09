@@ -2,7 +2,7 @@
 
 This project presents the design of an Entity-Relationship Diagram (ERD) for a multi-zone parking management system tailored for large-scale events such as Comic-Con India. The system is designed to efficiently manage the influx of thousands of visitors arriving with different types of vehicles over multiple days.
 
-## The parking facility is structured into various zones and levels, with specific areas reserved for VIP guests, staff members, exhibitors, cosplayers (with or without props), and electric vehicles (EVs). The system ensures seamless parking spot allocation, ticket generation, session tracking, and payment processing.
+The parking facility is structured into various zones and levels, with specific areas reserved for VIP guests, staff members, exhibitors, cosplayers (with or without props), and electric vehicles (EVs). The system ensures seamless parking spot allocation, ticket generation, session tracking, and payment processing.
 
 ## ER Diagram Preview
 
