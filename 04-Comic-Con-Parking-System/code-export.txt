@@ -1,0 +1,89 @@
+title Clinic Appointment and Diagnostics Platform
+notation chen
+colorMode pastel
+styleMode watercolor
+typeface clean
+
+participants [icon: users, color:green]{
+  participant_id serial pk
+  vehicle_id int fk
+  participant_name text not_null unique
+  email text not_null unique
+  role enum("vip_guest", "cosplayer", "cosplayer_with_props") not_null
+  phone text(10) not_null unique
+  DOB date not_null
+  address text not_null 
+
+  created_at  timestamp
+  updated_at timestamp
+} 
+
+staff[icon:settings, color:green]{
+  id serial pk
+  role enum("security", "staff") not_null
+  email text not_null unique
+  address text not_null 
+  phone text(10) not_null unique
+  vehicle_id int fk
+
+  created_at timestamp
+  updated_at timestamp
+} 
+
+payment[icon:payment, color:red]{
+  id serial pk
+  client_id int fk
+  amount int not null 
+  payment_method enum(cash, upi) not_null
+  
+  created_at timestamp
+  updated_at timestamp
+}
+
+tokens[icon:auth0, color: Red]{
+  id serial pk
+  token text not_null unique
+  refresh_token text not_null unique
+  updated_at timestamp 
+  expires_at data and time 
+}
+
+parking_spots[icon:layers, color:blue]{
+  id serial pk
+  categories enum("vip_spot","staff_reserved_spot", "cosplayer", "cosplayer_with_props") not_null
+  bullding_level enum(1, 2, 3) not_null
+  
+  created_at timestamp
+  updated_at timestamp
+}
+
+participant_vehicle[icon:car, color:blue]{
+  id serial pk
+  participant_id int fk
+  parking_spot_id int fk
+  status enum("parked", "", "") not_null
+  vehicles_type enum("bikes", "cars", "SUV", "cabs" "ev_vehicles") not_null
+  vehicles_no text not_null unique
+
+  entry timestamp
+  exit timestamp
+}
+//participants
+participants.participant_id - participant_vehicle.participant_id
+participants.vehicle_id - participant_vehicle.participant_id
+
+participant_vehicle.parking_spot_id - parking_spots.id
+
+
+staff.id - tokens.id
+staff.id - participant_vehicle.participant_id
+staff.vehicle_id - participant_vehicle.id
+
+
+//token
+participants.participant_id - tokens.id
+
+//payment will store all the info of the patient and have all the payment history from the first appointment.
+participants.participant_id - payment.client_id
+
+ 
