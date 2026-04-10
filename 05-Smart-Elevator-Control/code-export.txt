@@ -1,0 +1,77 @@
+title Comic-Con Parking System
+notation chen
+colorMode pastel
+styleMode watercolor
+typeface clean
+
+building[icon:building, color:blue]{
+  id serial pk
+  floors int fk
+  name text not_null 
+
+  created_at timestamp
+  updated_at timestamp
+}
+
+elevator_floor_map[icon:git-merge, color:purple]{
+  elevator_id int fk not_null
+  floor_id int fk not_null
+}
+
+elevator_floor_map.elevator_id > elevators.id
+elevator_floor_map.floor_id > building_floor.id
+
+building_floor[icon:layers, color:orange]{
+  id serial pk
+  bulidng_id int fk
+ 
+ 
+  created_at timestamp
+  updated_at timestamp
+}
+
+maintenance[icon:history, color: Blue] {
+  id serial pk
+  elevators_id int fk not_null
+  last_maintenance_date date not_null
+  last_maintenance_report text not_null  
+  next_maintenance_date date not_null
+
+  created_at timestamp 
+  updated_at timestamp 
+}
+
+elevators[icon:window, color:green]{
+  id serial pk
+  bulidng_id int fk
+  status enum(idle, moving, maintenance) not_null
+  maintenance_status ("running", "in_maintenance") not_null
+  accessable_by enum("staff_only", "non_staff", "anyone") not_null
+
+  created_at timestamp
+  updated_at timestamp
+}
+
+
+
+elevator_calls[icon:history, color:blue]{
+  id serial pk
+  elevators_id int fk
+  floor_id int fk
+  called_at timestamp not_null
+  trip_completed_at timestamp 
+  status ("completed", "pending") not_null
+
+
+  created_at timestamp
+}
+
+elevator_calls.elevators_id - elevators.id
+elevator_calls.floor_id - building_floor.id
+ 
+building.floors < building_floor.bulidng_id
+
+building.id< elevators.bulidng_id
+
+//all elevator will have one maintance id and will make a new record for every maintance
+maintenance.elevators_id - elevators.id
